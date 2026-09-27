@@ -9,7 +9,8 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
-
+  introduction: ^1.0.3
+    
 dev_dependencies:
   flutter_test:
     sdk: flutter
