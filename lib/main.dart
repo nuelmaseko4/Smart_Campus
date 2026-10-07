@@ -1,22 +1,22 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
 
-import 'views/onboard/pageview1.dart'; // Import your custom view
+import 'views/onboard/Onboard.dart';
 
 void main() {
-  runApp(const DevHubApp());
+  runApp(const SmartConnectApp());
 }
 
-class DevHubApp extends StatelessWidget {
-  const DevHubApp({super.key});
+class SmartConnectApp extends StatelessWidget {
+  const SmartConnectApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'DevHub App',
+      title: 'Smart_connect', // title of the app
       theme: ThemeData(primarySwatch: Colors.blue),
-      home: const PageViewScreen(), // Calling our view from the views folder
+      home: const OnboardScreen(), // Calling our view from the views folder
     );
   }
 }
