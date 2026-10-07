@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
+import 'onboard_controls.dart';
 import 'pageview1.dart';
 import 'pageview2.dart';
 import 'pageview3.dart';
@@ -14,11 +14,28 @@ class OnboardScreen extends StatefulWidget {
 
 class _OnboardScreenState extends State<OnboardScreen> {
   final PageController _pageController = PageController();
+  int _currentPage = 0;
+  final int _totalPages = 3;
 
   @override
   void dispose() {
     _pageController.dispose();
     super.dispose();
+  }
+
+  void finishOnboarding(BuildContext context) {
+    Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+  }
+
+  void _nextPage() {
+    if (_currentPage == _totalPages - 1) {
+      finishOnboarding(context);
+    } else {
+      _pageController.nextPage(
+        duration: const Duration(milliseconds: 400),
+        curve: Curves.easeInOut,
+      );
+    }
   }
 
   @override
@@ -28,14 +45,19 @@ class _OnboardScreenState extends State<OnboardScreen> {
         children: [
           PageView(
             controller: _pageController,
+            onPageChanged: (i) => setState(() => _currentPage = i),
             children: [PageView1(), PageView2(), PageView3()],
           ),
-          Container(
-            alignment: Alignment(0, 0.8),
-            child: SmoothPageIndicator(
+          Positioned(
+            left: 16,
+            right: 16,
+            bottom: 0,
+            child: OnboardControls(
               controller: _pageController,
-              count: 3,
-              effect: const ExpandingDotsEffect(),
+              currentPage: _currentPage,
+              totalPages: _totalPages,
+              onSkip: () => finishOnboarding(context),
+              onNext: _nextPage,
             ),
           ),
         ],
