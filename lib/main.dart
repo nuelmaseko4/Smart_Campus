@@ -18,7 +18,7 @@ class SmartConnectApp extends StatelessWidget {
       title: 'Smart_connect',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const OnboardScreen(),
-      routes: {'/home': (context) => const HomeScreen()},
+      routes: {'/home': (context) => HomeScreen()},
     );
   }
 }

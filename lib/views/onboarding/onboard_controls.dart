@@ -20,6 +20,7 @@ class OnboardControls extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final isLastPage = currentPage == totalPages - 1;
+    final orange = Colors.orange.shade900;
 
     return Row(
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -28,16 +29,21 @@ class OnboardControls extends StatelessWidget {
           opacity: isLastPage ? 0 : 1,
           child: TextButton(
             onPressed: isLastPage ? null : onSkip,
+            style: TextButton.styleFrom(foregroundColor: orange),
             child: const Text('Skip'),
           ),
         ),
         SmoothPageIndicator(
           controller: controller,
           count: totalPages,
-          effect: const ExpandingDotsEffect(),
+          effect: ExpandingDotsEffect(
+            activeDotColor: orange,
+            dotColor: orange.withValues(alpha: 0.35),
+          ),
         ),
         TextButton(
           onPressed: onNext,
+          style: TextButton.styleFrom(foregroundColor: orange),
           child: Text(isLastPage ? 'Done' : 'Next'),
         ),
       ],

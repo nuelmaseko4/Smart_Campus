@@ -9,6 +9,11 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  
+  cupertino_icons: ^1.0.9
+  animate_do: ^3.1.2
+
+
   introduction: ^1.0.3
   lottie: ^3.6.1
   smooth_page_indicator: ^3.0.0
