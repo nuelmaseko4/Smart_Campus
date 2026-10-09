@@ -1,8 +1,16 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
-class HomeScreen extends StatelessWidget {
+class HomeScreen extends StatefulWidget {
   const HomeScreen({super.key});
+
+  @override
+  State<HomeScreen> createState() => _HomeScreenState();
+}
+
+class _HomeScreenState extends State<HomeScreen> {
+  bool _showInvalidIdWarning = false;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +77,7 @@ class HomeScreen extends StatelessWidget {
                           child: Container(
                             decoration: BoxDecoration(
                               color: Colors.white,
-                              borderRadius: BorderRadius.circular(10),
+                              borderRadius: BorderRadius.circular(20),
                               boxShadow: const [
                                 BoxShadow(
                                   color: Color.fromRGBO(225, 95, 27, .3),
@@ -83,34 +91,60 @@ class HomeScreen extends StatelessWidget {
                                 Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
+                                    borderRadius: const BorderRadius.only(
+                                      topLeft: Radius.circular(20),
+                                      topRight: Radius.circular(20),
+                                    ),
                                     border: Border(
                                       bottom: BorderSide(
                                         color: Colors.grey.shade200,
                                       ),
                                     ),
                                   ),
-                                  child: const TextField(
+                                  child: TextField(
+                                    keyboardType: TextInputType.text,
+                                    inputFormatters: [
+                                      _IdInputFormatter(
+                                        onInvalidInput: (hasInvalidInput) {
+                                          if (_showInvalidIdWarning !=
+                                              hasInvalidInput) {
+                                            setState(() {
+                                              _showInvalidIdWarning =
+                                                  hasInvalidInput;
+                                            });
+                                          }
+                                        },
+                                      ),
+                                      LengthLimitingTextInputFormatter(15),
+                                    ],
                                     decoration: InputDecoration(
                                       hintText: "ID number",
                                       hintStyle: TextStyle(color: Colors.grey),
+                                      prefixIcon: Icon(Icons.badge_outlined),
                                       border: InputBorder.none,
+                                      errorText: _showInvalidIdWarning
+                                          ? 'Only letters and numbers are allowed.'
+                                          : null,
                                     ),
                                   ),
                                 ),
                                 Container(
                                   padding: const EdgeInsets.all(10),
                                   decoration: BoxDecoration(
-                                    border: Border(
-                                      bottom: BorderSide(
-                                        color: Colors.grey.shade200,
-                                      ),
+                                    borderRadius: const BorderRadius.only(
+                                      bottomLeft: Radius.circular(20),
+                                      bottomRight: Radius.circular(20),
                                     ),
                                   ),
-                                  child: const TextField(
+                                  child: TextField(
                                     obscureText: true,
+                                    inputFormatters: [
+                                      LengthLimitingTextInputFormatter(10),
+                                    ],
                                     decoration: InputDecoration(
                                       hintText: "Password",
                                       hintStyle: TextStyle(color: Colors.grey),
+                                      prefixIcon: Icon(Icons.lock_outline),
                                       border: InputBorder.none,
                                     ),
                                   ),
@@ -158,5 +192,26 @@ class HomeScreen extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class _IdInputFormatter extends TextInputFormatter {
+  _IdInputFormatter({required this.onInvalidInput});
+
+  final ValueChanged<bool> onInvalidInput;
+  final FilteringTextInputFormatter _allowedCharacters =
+      FilteringTextInputFormatter.allow(RegExp(r'[a-zA-Z0-9]'));
+
+  @override
+  TextEditingValue formatEditUpdate(
+    TextEditingValue oldValue,
+    TextEditingValue newValue,
+  ) {
+    final filteredValue = _allowedCharacters.formatEditUpdate(
+      oldValue,
+      newValue,
+    );
+    onInvalidInput(filteredValue.text != newValue.text);
+    return filteredValue;
   }
 }
