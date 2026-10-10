@@ -13,7 +13,7 @@ class PageView2 extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.asset(
-              'assests/animations/01_rfid_access.json',
+              'assests/animations/lottie/onboarding/checking_phone.json',
               width: 280,
               height: 280,
               fit: BoxFit.contain,

@@ -27,4 +27,6 @@ flutter:
   uses-material-design: true
   assets:
     - assests/animations/
-    - assests/animations/onboarding/
+    - assests/animations/lottie/onboarding/
+  
+     

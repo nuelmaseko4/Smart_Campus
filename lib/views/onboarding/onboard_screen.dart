@@ -4,6 +4,7 @@ import 'onboard_controls.dart';
 import 'pageview1.dart';
 import 'pageview2.dart';
 import 'pageview3.dart';
+import 'pageview4.dart';
 
 class OnboardScreen extends StatefulWidget {
   const OnboardScreen({super.key});
@@ -15,7 +16,7 @@ class OnboardScreen extends StatefulWidget {
 class _OnboardScreenState extends State<OnboardScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0;
-  final int _totalPages = 3;
+  final int _totalPages = 4;
 
   @override
   void dispose() {
@@ -46,7 +47,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
           PageView(
             controller: _pageController,
             onPageChanged: (i) => setState(() => _currentPage = i),
-            children: [PageView1(), PageView2(), PageView3()],
+            children: [PageView1(), PageView2(), PageView3(), PageView4()],
           ),
           Positioned(
             left: 16,

@@ -4,6 +4,7 @@ import 'package:uni_connect/views/onboarding/onboard_controls.dart'; // NEW
 import '../onboarding/pageview1.dart';
 import '../onboarding/pageview2.dart';
 import '../onboarding/pageview3.dart';
+import '../onboarding/pageview4.dart';
 
 class OnboardScreen extends StatefulWidget {
   const OnboardScreen({super.key});
@@ -15,7 +16,7 @@ class OnboardScreen extends StatefulWidget {
 class _OnboardScreenState extends State<OnboardScreen> {
   final PageController _pageController = PageController();
   int _currentPage = 0; // NEW
-  final int _totalPages = 3; // NEW
+  final int _totalPages = 4; // NEW
 
   @override
   void dispose() {
@@ -46,7 +47,12 @@ class _OnboardScreenState extends State<OnboardScreen> {
           PageView(
             controller: _pageController,
             onPageChanged: (i) => setState(() => _currentPage = i), // NEW
-            children: [PageView1(), PageView2(), PageView3()],
+            children: [
+              PageView1(),
+              PageView2(),
+              PageView3(),
+              PageView4(),
+            ], // NEW
           ),
           // NEW: replaces the old Container + SmoothPageIndicator
           Positioned(
