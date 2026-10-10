@@ -30,7 +30,7 @@ class PageView1 extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              ' an App to connect students with\n their university resources and community.',
+              'Your ultimate university companion',
               style: TextStyle(fontSize: 16, color: Colors.black),
             ),
           ],

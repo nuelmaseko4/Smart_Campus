@@ -19,15 +19,10 @@ class PageView2 extends StatelessWidget {
               fit: BoxFit.contain,
               repeat: true,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 60),
             const Text(
-              'A secure way of communication',
+              'Connect  with your university seamlessly\nsecure and convenient',
               style: TextStyle(fontSize: 15, color: Colors.black),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Connect with your university seamlessly',
-              style: TextStyle(fontSize: 16, color: Colors.black),
             ),
           ],
         ),

@@ -25,7 +25,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
   }
 
   void finishOnboarding(BuildContext context) {
-    Navigator.of(context).pushNamedAndRemoveUntil('/home', (route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
   }
 
   void _nextPage() {
@@ -52,7 +52,7 @@ class _OnboardScreenState extends State<OnboardScreen> {
           Positioned(
             left: 16,
             right: 16,
-            bottom: 0,
+            bottom: 40,
             child: OnboardControls(
               controller: _pageController,
               currentPage: _currentPage,

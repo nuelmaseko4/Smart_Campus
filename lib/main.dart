@@ -1,8 +1,8 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
+import 'package:uni_connect/views/login/login_screen.dart';
 
-import 'views/home_screen.dart';
-import 'views/onboarding/onboard.dart';
+import 'views/onboarding/onboard_screen.dart';
 
 void main() {
   runApp(const SmartConnectApp());
@@ -15,10 +15,10 @@ class SmartConnectApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
-      title: 'Smart_connect',
+      title: 'UniConnect',
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const OnboardScreen(),
-      routes: {'/home': (context) => HomeScreen()},
+      routes: {'/login': (context) => const LoginScreen()},
     );
   }
 }

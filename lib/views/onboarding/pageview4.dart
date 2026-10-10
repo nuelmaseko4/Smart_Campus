@@ -20,14 +20,22 @@ class PageView4 extends StatelessWidget {
               repeat: true,
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Easily track your class attandance and performance',
-              style: TextStyle(fontSize: 15, color: Colors.black),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: Text(
+                'Easily track your class attendance and performance',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15, color: Colors.black),
+              ),
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Connect with your university seamlessly',
-              style: TextStyle(fontSize: 16, color: Colors.black),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: Text(
+                'Connect with your university seamlessly',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 16, color: Colors.black),
+              ),
             ),
           ],
         ),

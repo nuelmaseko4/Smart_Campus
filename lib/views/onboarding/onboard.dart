@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:uni_connect/views/onboarding/onboard_controls.dart'; // NEW
+
+import 'onboard_controls.dart';
 
 import '../onboarding/pageview1.dart';
 import '../onboarding/pageview2.dart';
