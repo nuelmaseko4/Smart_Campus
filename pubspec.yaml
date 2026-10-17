@@ -17,6 +17,7 @@ dependencies:
   introduction: ^1.0.3
   lottie: ^3.6.1
   smooth_page_indicator: ^3.0.0
+  google_nav_bar: ^5.0.7
     
 dev_dependencies:
   flutter_test:
