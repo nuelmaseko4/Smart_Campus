@@ -25,7 +25,10 @@ class _OnboardScreenState extends State<OnboardScreen> {
   }
 
   void finishOnboarding(BuildContext context) {
-    Navigator.of(context).pushNamedAndRemoveUntil('/login', (route) => false);
+    Navigator.of(context).pushNamedAndRemoveUntil(
+      '/login',
+      (route) => false,
+    ); // the page after the intro page
   }
 
   void _nextPage() {

@@ -18,6 +18,8 @@ dependencies:
   lottie: ^3.6.1
   smooth_page_indicator: ^3.0.0
   google_nav_bar: ^5.0.7
+  http: ^1.6.0
+  flutter_secure_storage: ^11.2.0
     
 dev_dependencies:
   flutter_test:
