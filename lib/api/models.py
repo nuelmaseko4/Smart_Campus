@@ -28,7 +28,6 @@ class Course(db.Model):
     course_name = db.Column(db.String(100), nullable=False)
     course_code = db.Column(db.String(20), unique=True, nullable=False)
     department = db.Column(db.String(100), nullable=False)
-    description = db.Column(db.Text, nullable=True)
     duration = db.Column(db.Integer, nullable=False)
 
 
@@ -100,6 +99,6 @@ class Gate(db.Model):
 class rooms(db.Model):
     __tablename__ = 'rooms'
     id = db.Column(db.Integer, primary_key=True)
-    room_number = db.Column(db.String(20), unique=True, nullable=False)
+    room_name = db.Column(db.String(20), unique=True, nullable=False)
     capacity = db.Column(db.Integer, nullable=False)
     building = db.Column(db.String(100), nullable=False)

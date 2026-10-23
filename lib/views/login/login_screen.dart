@@ -60,6 +60,7 @@ class LoginScreen extends StatelessWidget {
                           child: ElevatedButton(
                             onPressed: () {
                               Navigator.push(
+                                // login button navigates to the StudentNavBar screen
                                 context,
                                 MaterialPageRoute(
                                   builder: (context) => const StudentNavBar(),

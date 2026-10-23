@@ -1,7 +1,7 @@
 from flask import request, jsonify
 from werkzeug.security import check_password_hash
-from lib.api.model import Student, User
-from model import User,Student 
+from lib.api.models import Student, User
+from lib.api.models import User,Student 
 
 def login_route(app):
     @app.route('/api/login', methods=['POST'])

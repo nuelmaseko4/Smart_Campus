@@ -6,12 +6,12 @@ from flask_jwt_extended import (
 )
 from sqlalchemy.exc import IntegrityError
 
-from models import db, Course, lecture, Student
+from models import db, Course, lecture, Student, rooms
 
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///uni_connect.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.config['JWT_SECRET_KEY'] = 'change-this-to-a-long-random-string'
+app.config['JWT_SECRET_KEY'] = 'hjh7ggfgbnbjbnj889876'
 app.config['JWT_ACCESS_TOKEN_EXPIRES'] = timedelta(hours=12)
 
 db.init_app(app)
@@ -48,8 +48,7 @@ def add_courses():
     try:
         rows = [Course(
             course_name=d['course_name'], course_code=d['course_code'],
-            department=d['department'], description=d.get('description'),
-            duration=d['duration'],
+            department=d['department'], duration=d['duration'],
         ) for d in as_list(request.get_json())]
     except KeyError as e:
         return jsonify({'message': f'Missing field: {e}'}), 400
@@ -145,6 +144,13 @@ def login():
 
     token = create_access_token(identity=user_id, additional_claims={'role': role})
     return jsonify({'token': token, 'role': role, 'id': user_id, 'name': name}), 200
+
+@app.route('/rooms', methods=['Post'])
+def list_rooms():
+    return jsonify([
+        {'id': r.id, 'room_name': r.room_name, 'capacity': r.capacity, 'building': r.building}
+        for r in rooms.query.all()
+    ])
 
 
 @app.route('/me', methods=['GET'])
