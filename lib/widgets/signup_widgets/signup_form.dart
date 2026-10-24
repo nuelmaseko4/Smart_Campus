@@ -32,7 +32,12 @@ class _SignUpFormState extends State<SignUpForm> {
   InputDecoration _decoration(String label, IconData icon, {Widget? suffix}) {
     return InputDecoration(
       labelText: label,
-      prefixIcon: Icon(icon, color: Colors.grey),
+      labelStyle: TextStyle(color: Colors.grey.shade600),
+      floatingLabelStyle: TextStyle(
+        color: Colors.orange.shade800,
+        fontWeight: FontWeight.w600,
+      ),
+      prefixIcon: Icon(icon, color: Colors.grey.shade600),
       suffixIcon: suffix,
       filled: true,
       fillColor: Colors.grey.shade100,
@@ -76,6 +81,7 @@ class _SignUpFormState extends State<SignUpForm> {
       child: Column(
         children: [
           FadeInUp(
+            // text field for entering name
             duration: const Duration(milliseconds: 1000),
             child: TextFormField(
               controller: _nameController,
@@ -91,6 +97,7 @@ class _SignUpFormState extends State<SignUpForm> {
           ),
           const SizedBox(height: 20),
           FadeInUp(
+            // text field for entering student number
             duration: const Duration(milliseconds: 1100),
             child: TextFormField(
               controller: _studentNumberController,
@@ -183,7 +190,7 @@ class _SignUpFormState extends State<SignUpForm> {
               },
             ),
           ),
-          const SizedBox(height: 40),
+          const SizedBox(height: 24),
           FadeInUp(
             duration: const Duration(milliseconds: 1500),
             child: SizedBox(
@@ -208,14 +215,14 @@ class _SignUpFormState extends State<SignUpForm> {
               ),
             ),
           ),
-          const SizedBox(height: 30),
+          const SizedBox(height: 12),
           FadeInUp(
             duration: const Duration(milliseconds: 1600),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Already have an account? ',
+                  'Already have an account? ', // buttom part of the sign up form that prompts the user to log in if they already have an account
                   style: TextStyle(color: Colors.grey),
                 ),
                 GestureDetector(
