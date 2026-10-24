@@ -1,8 +1,11 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:uni_connect/widgets/login_form.dart';
-import 'package:uni_connect/widgets/login_header.dart';
-import 'package:uni_connect/widgets/student_nav_bar.dart';
+
+import '/views/signup/signup_screen.dart';
+import '/widgets/login_widgets/login_header.dart';
+import '/widgets/student_widgets/student_nav_bar.dart';
+
+import '../../widgets/login_widgets/login_form.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
@@ -84,6 +87,38 @@ class LoginScreen extends StatelessWidget {
                             ),
                           ),
                         ),
+                        const SizedBox(height: 30),
+                        FadeInUp(
+                          duration: const Duration(milliseconds: 1600),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Don't have an account? ", // sign up prompt text
+                                style: TextStyle(color: Colors.grey),
+                              ),
+                              GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) =>
+                                          const SignUpScreen(),
+                                    ),
+                                  );
+                                },
+                                child: Text(
+                                  "Sign Up",
+                                  style: TextStyle(
+                                    color: Colors.orange.shade900,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                        const SizedBox(height: 20),
                       ],
                     ),
                   ),
