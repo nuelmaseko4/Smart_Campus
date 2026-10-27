@@ -13,6 +13,8 @@ def add_courses():
             course_name=d['course_name'], course_code=d['course_code'],
             department=d['department'], duration=d['duration'],
         ) for d in as_list(request.get_json())]
+    except ValueError as e:
+        return jsonify({'message': str(e)}), 400
     except KeyError as e:
         return jsonify({'message': f'Missing field: {e}'}), 400
     return save_all(rows)

@@ -6,7 +6,7 @@ from flask_jwt_extended import JWTManager
 from models import db
 from routes.auth_route import auth_bp
 from routes.courses_route import courses_bp
-from routes.lecturers_route import lecturers_bp
+from routes.lecturers_route import lecturer_bp
 from routes.rooms_route import rooms_bp
 from routes.signup_route import signup_bp
 from routes.students_route import students_bp
@@ -22,7 +22,7 @@ db.init_app(app)
 jwt = JWTManager(app)
 
 # register route files (blueprints)
-for bp in (auth_bp, courses_bp, lecturers_bp, rooms_bp, signup_bp, students_bp):
+for bp in (auth_bp, courses_bp, lecturer_bp, rooms_bp, signup_bp, students_bp):
     app.register_blueprint(bp)
 
 with app.app_context():

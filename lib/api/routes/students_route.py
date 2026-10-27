@@ -20,6 +20,8 @@ def add_students():
             )
             s.set_password(d['password'])
             rows.append(s)
+    except ValueError as e:
+        return jsonify({'message': str(e)}), 400
     except KeyError as e:
         return jsonify({'message': f'Missing field: {e}'}), 400
     return save_all(rows)
