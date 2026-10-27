@@ -10,12 +10,6 @@ signup_bp = Blueprint('signup', __name__)
 EMAIL_RE = re.compile(r'^[^@\s]+@[^@\s]+\.[^@\s]+$')
 
 
-@signup_bp.route('/courses', methods=['GET'])
-def get_courses():
-    courses = Course.query.order_by(Course.course_name).all()
-    return jsonify([{'id': c.id, 'name': c.course_name} for c in courses])
-
-
 @signup_bp.route('/signup', methods=['POST'])
 def signup():
     data = request.get_json(silent=True) or {}

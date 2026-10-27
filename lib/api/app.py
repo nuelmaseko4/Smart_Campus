@@ -1,6 +1,7 @@
 from datetime import timedelta
+from urllib.parse import urlparse
 
-from flask import Flask
+from flask import Flask, request
 from flask_jwt_extended import JWTManager
 
 from models import db
@@ -27,6 +28,23 @@ for bp in (auth_bp, courses_bp, lecturer_bp, rooms_bp, signup_bp, students_bp):
 
 with app.app_context():
     db.create_all()
+
+
+@app.after_request
+def add_local_development_cors(response):
+    origin = request.headers.get('Origin')
+    if origin:
+        parsed_origin = urlparse(origin)
+        if parsed_origin.hostname in {'localhost', '127.0.0.1', '::1'}:
+            response.headers['Access-Control-Allow-Origin'] = origin
+            response.headers['Access-Control-Allow-Headers'] = (
+                'Content-Type, Authorization'
+            )
+            response.headers['Access-Control-Allow-Methods'] = (
+                'GET, POST, OPTIONS'
+            )
+            response.headers.add('Vary', 'Origin')
+    return response
 
 
 @app.route('/')
