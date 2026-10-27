@@ -10,18 +10,30 @@ class SignUpForm extends StatefulWidget {
 
 class _SignUpFormState extends State<SignUpForm> {
   final _formKey = GlobalKey<FormState>();
-  final _nameController = TextEditingController();
   final _studentNumberController = TextEditingController();
   final _emailController = TextEditingController();
   final _passwordController = TextEditingController();
   final _confirmPasswordController = TextEditingController();
+
+  // temporary list of courses, will be replaced by courses from the database later
+  final List<String> _courses = [
+    'Computer Science',
+    'Information Technology',
+    'Software Engineering',
+    'Business Administration',
+    'Accounting and Finance',
+    'Civil Engineering',
+    'Electrical Engineering',
+    'Nursing',
+    'Education',
+    'Law',
+  ];
 
   bool _hidePassword = true;
   bool _hideConfirmPassword = true;
 
   @override
   void dispose() {
-    _nameController.dispose();
     _studentNumberController.dispose();
     _emailController.dispose();
     _passwordController.dispose();
@@ -81,24 +93,8 @@ class _SignUpFormState extends State<SignUpForm> {
       child: Column(
         children: [
           FadeInUp(
-            // text field for entering name
-            duration: const Duration(milliseconds: 1000),
-            child: TextFormField(
-              controller: _nameController,
-              textCapitalization: TextCapitalization.words,
-              decoration: _decoration('Full Name', Icons.person_outline),
-              validator: (value) {
-                if (value == null || value.trim().isEmpty) {
-                  return 'Please enter your full name';
-                }
-                return null;
-              },
-            ),
-          ),
-          const SizedBox(height: 20),
-          FadeInUp(
             // text field for entering student number
-            duration: const Duration(milliseconds: 1100),
+            duration: const Duration(milliseconds: 1000),
             child: TextFormField(
               controller: _studentNumberController,
               keyboardType: TextInputType.number,
@@ -113,7 +109,7 @@ class _SignUpFormState extends State<SignUpForm> {
           ),
           const SizedBox(height: 20),
           FadeInUp(
-            duration: const Duration(milliseconds: 1200),
+            duration: const Duration(milliseconds: 1100),
             child: TextFormField(
               controller: _emailController,
               keyboardType: TextInputType.emailAddress,
@@ -127,6 +123,27 @@ class _SignUpFormState extends State<SignUpForm> {
                 }
                 return null;
               },
+            ),
+          ),
+          const SizedBox(height: 20),
+          FadeInUp(
+            // searchable drop down menu for selecting a course
+            duration: const Duration(milliseconds: 1200),
+            child: DropdownMenuFormField<String>(
+              dropdownMenuEntries: _courses
+                  .map(
+                    (course) =>
+                        DropdownMenuEntry<String>(value: course, label: course),
+                  )
+                  .toList(),
+              enableFilter: true,
+              enableSearch: true,
+              expandedInsets: EdgeInsets.zero,
+              menuHeight: 300,
+              decorationBuilder: (context, menuController) =>
+                  _decoration('Course', Icons.school_outlined),
+              validator: (value) =>
+                  value == null ? 'Please select your course' : null,
             ),
           ),
           const SizedBox(height: 20),
@@ -222,7 +239,7 @@ class _SignUpFormState extends State<SignUpForm> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 const Text(
-                  'Already have an account? ', // buttom part of the sign up form that prompts the user to log in if they already have an account
+                  'Already have an account? ', // bottom part of the sign up form that prompts the user to log in if they already have an account
                   style: TextStyle(color: Colors.grey),
                 ),
                 GestureDetector(
