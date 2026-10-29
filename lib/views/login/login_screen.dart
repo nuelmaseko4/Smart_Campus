@@ -2,9 +2,26 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:uni_connect/widgets/login_form.dart';
 import 'package:uni_connect/widgets/login_header.dart';
+import 'package:uni_connect/services/login_service.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({
+    super.key,
+    this.role = 'student',
+    this.service = const LoginService(),
+  });
+
+  final String role;
+  final LoginService service;
+
+  Future<void> _openStudentSignup(BuildContext context) async {
+    final created = await Navigator.of(context).pushNamed('/student-signup');
+    if (!context.mounted || created != true) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Account created. Please log in.')),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,7 +61,16 @@ class LoginScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         const SizedBox(height: 60),
-                        const LoginForm(),
+                        LoginForm(
+                          role: role,
+                          service: service,
+                          onAuthenticated: () {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/student',
+                              (route) => false,
+                            );
+                          },
+                        ),
                         const SizedBox(height: 40),
                         FadeInUp(
                           duration: const Duration(milliseconds: 1500),
@@ -53,28 +79,30 @@ class LoginScreen extends StatelessWidget {
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
-                        const SizedBox(height: 40),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {},
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange.shade900,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
+                        const SizedBox(height: 24),
+                        FadeInUp(
+                          duration: const Duration(milliseconds: 1600),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              const Text(
+                                "Don't have an account? ",
+                                style: TextStyle(color: Colors.grey),
                               ),
-                            ),
-                            child: const Text(
-                              'Login',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
+                              TextButton(
+                                onPressed: () => _openStudentSignup(context),
+                                child: Text(
+                                  'Sign up',
+                                  style: TextStyle(
+                                    color: Colors.orange.shade900,
+                                    fontWeight: FontWeight.bold,
+                                  ),
+                                ),
                               ),
-                            ),
+                            ],
                           ),
                         ),
+                        const SizedBox(height: 32),
                       ],
                     ),
                   ),

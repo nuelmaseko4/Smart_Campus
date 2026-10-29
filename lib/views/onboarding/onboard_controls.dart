@@ -22,7 +22,7 @@ class OnboardControls extends StatelessWidget {
     final isLastPage = currentPage == totalPages - 1;
     final orange = Colors.orange.shade900;
 
-    return Row(
+    return Row( // skip button
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Opacity(
