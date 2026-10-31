@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 
 import 'package:uni_connect/services/login_service.dart';
 import 'package:uni_connect/widgets/app_button.dart';
+import 'package:uni_connect/widgets/app_text_field.dart';
 
 class LoginForm extends StatefulWidget {
   const LoginForm({
@@ -78,7 +79,7 @@ class _LoginFormState extends State<LoginForm> {
     final isStudent = widget.role == 'student';
     final inputHint = isStudent ? 'Student ID number' : 'Username';
     final inputIcon = isStudent ? Icons.badge_outlined : Icons.person_outline;
-    final buttonText = isStudent ? 'Login as Student' : 'Login as Lecturer';
+    final buttonText = isStudent ? 'Login' : 'Login as Lecturer';
 
     return FadeInUp(
       duration: const Duration(milliseconds: 1400),
@@ -110,7 +111,7 @@ class _LoginFormState extends State<LoginForm> {
                     bottom: BorderSide(color: Colors.grey.shade200),
                   ),
                 ),
-                child: TextFormField(
+                child: AppTextField(
                   controller: _usernameController,
                   decoration: InputDecoration(
                     hintText: inputHint, // 👈 Dynamic hint
@@ -127,7 +128,7 @@ class _LoginFormState extends State<LoginForm> {
               // --- Password Field ---
               Container(
                 padding: const EdgeInsets.all(10),
-                child: TextFormField(
+                child: AppTextField(
                   controller: _passwordController,
                   obscureText: true,
                   decoration: const InputDecoration(

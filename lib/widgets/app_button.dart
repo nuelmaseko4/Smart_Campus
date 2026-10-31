@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class AppButton extends StatelessWidget {
   final String text;
   final VoidCallback onPressed;
-  final IconData? icon;         // Optional: Show an icon on the left
-  final bool isLoading;         // Optional: Show a spinning circle instead of text
+  final IconData? icon; // Optional: Show an icon on the left
+  final bool isLoading; // Optional: Show a spinning circle instead of text
+  final bool enabled;
   final Color? backgroundColor; // Optional: Change color if needed
 
   const AppButton({
@@ -13,6 +14,7 @@ class AppButton extends StatelessWidget {
     required this.onPressed,
     this.icon,
     this.isLoading = false,
+    this.enabled = true,
     this.backgroundColor,
   });
 
@@ -22,7 +24,7 @@ class AppButton extends StatelessWidget {
       width: double.infinity,
       height: 55, // Keeps all buttons across the app the exact same height
       child: ElevatedButton(
-        onPressed: isLoading ? null : onPressed, // Disable button while loading
+        onPressed: isLoading || !enabled ? null : onPressed,
         style: ElevatedButton.styleFrom(
           backgroundColor: backgroundColor ?? Colors.orange.shade900,
           foregroundColor: Colors.white,
@@ -36,7 +38,10 @@ class AppButton extends StatelessWidget {
                 height: 24,
                 width: 24,
                 // Show a little white loading spinner
-                child: CircularProgressIndicator(color: Colors.white, strokeWidth: 2),
+                child: CircularProgressIndicator(
+                  color: Colors.white,
+                  strokeWidth: 2,
+                ),
               )
             : Row(
                 mainAxisAlignment: MainAxisAlignment.center,
