@@ -77,6 +77,17 @@ in `SignUpService`, then call it from the lecturer branch in
 - The service sends a `POST` request to `/signup` and returns a success flag
   and message. On success, the signup screen sends the same student number and
   password to `/login`; a successful login opens the student portal directly.
+- The course picker is searchable on Android: tap the field and type part of a
+  course name.
+
+## Student and lecturer portal navigation
+
+- `lib/widgets/app_navigation_bar.dart` provides the shared bottom navigation
+  widget and accepts each portal's own destinations.
+- `lib/views/students/student_home_page.dart` is the student portal page.
+- `lib/views/lecture/lecture_home_page.dart` uses the same navigation widget
+  for the lecturer portal.
+- Successful student and lecturer logins open their matching portal routes.
 
 ## Run the student flow on an Android phone with Flask
 

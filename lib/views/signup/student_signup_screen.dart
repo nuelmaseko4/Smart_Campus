@@ -73,10 +73,8 @@ class _StudentSignUpScreenState extends State<StudentSignUpScreen> {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(content: Text('Account created. Welcome!')),
       );
-      Navigator.of(context).pushNamedAndRemoveUntil(
-        '/student',
-        (route) => false,
-      );
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/student', (route) => false);
     } catch (error, stackTrace) {
       debugPrint('Automatic login after signup failed: $error');
       debugPrintStack(stackTrace: stackTrace);
@@ -91,10 +89,7 @@ class _StudentSignUpScreenState extends State<StudentSignUpScreen> {
 
   void _returnToLogin(String message) {
     ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: Colors.red.shade700,
-        content: Text(message),
-      ),
+      SnackBar(backgroundColor: Colors.red.shade700, content: Text(message)),
     );
     Navigator.of(context).pop();
   }
@@ -136,6 +131,7 @@ class _StudentSignUpScreenState extends State<StudentSignUpScreen> {
                 child: AppDropdownField(
                   label: 'Course',
                   icon: Icons.school_outlined,
+                  helperText: 'Tap to search by course name',
                   options: _controller.courseOptions,
                   selectedValue: _controller.selectedCourse,
                   isLoading: _controller.isLoadingCourses,

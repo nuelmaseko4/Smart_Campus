@@ -11,6 +11,7 @@ class AppDropdownField extends StatelessWidget {
     this.selectedValue,
     this.icon = Icons.arrow_drop_down,
     this.isLoading = false,
+    this.helperText,
   });
 
   final String label;
@@ -20,6 +21,7 @@ class AppDropdownField extends StatelessWidget {
   final String? selectedValue;
   final IconData icon;
   final bool isLoading;
+  final String? helperText;
 
   @override
   Widget build(BuildContext context) {
@@ -43,9 +45,11 @@ class AppDropdownField extends StatelessWidget {
           .toList(),
       enableFilter: true,
       enableSearch: true,
+      requestFocusOnTap: true,
       expandedInsets: EdgeInsets.zero,
       menuHeight: 300,
-      decorationBuilder: (context, menuController) => decoration,
+      decorationBuilder: (context, menuController) =>
+          decoration.copyWith(helperText: helperText),
       onSelected: onSelected,
       validator: validator,
     );

@@ -63,7 +63,9 @@ class SignUpController extends ChangeNotifier {
       debugPrintStack(stackTrace: stackTrace);
       if (_isDisposed) return;
       isLoadingCourses = false;
-      courseLoadError = 'Could not load courses. Please try again.';
+      courseLoadError =
+          'Could not load courses from ${SignUpService.baseUrl}. '
+          'Check that Flask is running and USB port forwarding is active, then retry.';
       _notifyIfActive();
     }
   }

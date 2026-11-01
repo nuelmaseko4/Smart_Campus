@@ -15,7 +15,10 @@ class _FakeSignUpService extends SignUpService {
   @override
   Future<List<Course>> fetchCourses() async {
     coursesRequested = true;
-    return const [Course(id: 1, name: 'Computer Science')];
+    return const [
+      Course(id: 1, name: 'Computer Science'),
+      Course(id: 2, name: 'Business Administration'),
+    ];
   }
 
   @override
@@ -114,4 +117,20 @@ void main() {
       expect(find.text('Student Sign Up'), findsNothing);
     },
   );
+
+  testWidgets('student course list can be searched by name', (tester) async {
+    await tester.pumpWidget(
+      MaterialApp(home: StudentSignUpScreen(service: _FakeSignUpService())),
+    );
+    await tester.pumpAndSettle();
+
+    expect(find.text('Tap to search by course name'), findsOneWidget);
+    await tester.tap(find.byType(DropdownMenuFormField<String>));
+    await tester.pumpAndSettle();
+    await tester.enterText(find.byType(TextField).at(2), 'Business');
+    await tester.pumpAndSettle();
+
+    expect(find.text('Business Administration'), findsOneWidget);
+    expect(find.text('Computer Science'), findsNothing);
+  });
 }

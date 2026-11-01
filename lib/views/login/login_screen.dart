@@ -66,7 +66,7 @@ class LoginScreen extends StatelessWidget {
                           service: service,
                           onAuthenticated: () {
                             Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/student',
+                              role == 'lecturer' ? '/lecturer' : '/student',
                               (route) => false,
                             );
                           },
