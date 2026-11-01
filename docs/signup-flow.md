@@ -15,7 +15,8 @@ and API requests live.
    callbacks.
 5. The controller validates values and calls `SignUpService` when that role
    has an implemented backend flow.
-6. The screen displays the result and navigates back after success.
+6. After student signup succeeds, the screen signs the student in and opens the
+   student portal. If automatic login fails, it returns to the login screen.
 
 ## Files and responsibilities
 
@@ -74,8 +75,74 @@ in `SignUpService`, then call it from the lecturer branch in
 - `SignUpController.submit()` passes the student number, email, course, and
   password to `SignUpService.signUp()`.
 - The service sends a `POST` request to `/signup` and returns a success flag
-  and message. The form shows that message and returns `true` to the previous
-  screen on success.
+  and message. On success, the signup screen sends the same student number and
+  password to `/login`; a successful login opens the student portal directly.
+
+## Run the student flow on an Android phone with Flask
+
+The Flask API lives in `lib/api`. For USB debugging, start it from that folder
+on the development computer:
+
+```powershell
+Set-Location lib\api
+python -m flask --app app run --host 127.0.0.1 --port 5000 --no-debugger
+```
+
+In VS Code, select **UniConnect (Android phone via USB)** in Run and Debug.
+Its pre-launch task runs `adb reverse` for port 5000, and its Dart define points
+the app at `http://127.0.0.1:5000` on the phone. Keep the phone connected with
+USB debugging enabled. The API should respond at `/` and `/courses` on the
+development computer before launching the Flutter app.
+
+Debug Android builds allow cleartext HTTP for this local development API. That
+setting is limited to `src/debug`; use HTTPS and a production server for
+release builds. The phone and computer can instead communicate over Wi-Fi, but
+that requires Flask to listen on the computer's LAN interface and the app's
+`API_BASE_URL` Dart define to use the computer's current LAN IP.
+
+### Standalone profile APK over Wi-Fi
+
+For a standalone, non-debuggable test build, connect the phone and computer to
+the same trusted Wi-Fi network. Find the computer's current IPv4 address with
+`ipconfig`, then allow inbound TCP port 5000 through Windows Firewall on the
+Private profile only (run PowerShell as Administrator):
+
+```powershell
+New-NetFirewallRule -DisplayName "UniConnect Flask (Private Wi-Fi)" `
+  -Direction Inbound -Action Allow -Protocol TCP -LocalPort 5000 `
+  -Profile Private
+```
+
+Start Flask so it listens on the LAN interface:
+
+```powershell
+Set-Location lib\api
+python -m flask --app app run --host 0.0.0.0 --port 5000 --no-debugger
+```
+
+Replace `192.168.1.145` below with the computer's current IPv4 address. Open
+`http://192.168.1.145:5000/` in the phone's browser first; it should show
+`uni_connect API is running`. Then build a standalone profile APK:
+
+```powershell
+flutter build apk --profile `
+  --dart-define=API_BASE_URL=http://192.168.1.145:5000
+```
+
+Install `build\app\outputs\flutter-apk\app-profile.apk` on the phone (for
+example, copy it to the phone and open it). Profile builds permit cleartext
+HTTP only to support this trusted-LAN test setup. Do not distribute that
+profile APK or use HTTP beyond a trusted local network; use HTTPS for release
+builds. The app needs rebuilding if the computer's LAN IP changes.
+
+The Flutter student service expects:
+
+- `GET /courses` to return a JSON list containing integer `id` and string
+  `course_name` values.
+- `POST /signup` to accept `student_id`, `email`, `course_name`, and `password`,
+  returning HTTP 201 and a JSON `message` on success.
+- `POST /login` to accept `role`, `username` (the student number for students),
+  and `password`, returning HTTP 200 with a non-empty `token`.
 
 ## Tests
 

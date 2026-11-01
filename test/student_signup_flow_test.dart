@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_test/flutter_test.dart';
+import 'package:uni_connect/services/login_service.dart';
 import 'package:uni_connect/services/signup_services.dart';
 import 'package:uni_connect/views/login/login_screen.dart';
 import 'package:uni_connect/views/signup/student_signup_screen.dart';
@@ -32,6 +33,23 @@ class _FakeSignUpService extends SignUpService {
   }
 }
 
+class _FakeLoginService extends LoginService {
+  bool loginCalled = false;
+
+  @override
+  Future<LoginResult> login({
+    required String role,
+    required String username,
+    required String password,
+  }) async {
+    loginCalled = true;
+    expect(role, 'student');
+    expect(username, '123456');
+    expect(password, 'password123');
+    return const LoginResult(success: true, message: 'Welcome');
+  }
+}
+
 void main() {
   testWidgets('login sign-up link opens student registration', (tester) async {
     final service = _FakeSignUpService();
@@ -57,11 +75,18 @@ void main() {
   });
 
   testWidgets(
-    'student signup sends registration details and returns to login',
+    'student signup creates the account, logs in, and opens the portal',
     (tester) async {
       final service = _FakeSignUpService();
+      final loginService = _FakeLoginService();
       await tester.pumpWidget(
-        MaterialApp(home: StudentSignUpScreen(service: service)),
+        MaterialApp(
+          home: StudentSignUpScreen(
+            service: service,
+            loginService: loginService,
+          ),
+          routes: {'/student': (_) => const Text('Student Portal')},
+        ),
       );
       await tester.pumpAndSettle();
 
@@ -84,6 +109,8 @@ void main() {
       expect(service.submittedStudentNumber, '123456');
       expect(service.submittedEmail, 'student@example.com');
       expect(service.submittedCourse, 'Computer Science');
+      expect(loginService.loginCalled, isTrue);
+      expect(find.text('Student Portal'), findsOneWidget);
       expect(find.text('Student Sign Up'), findsNothing);
     },
   );
