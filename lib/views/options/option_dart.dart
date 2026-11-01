@@ -1,12 +1,8 @@
 import 'package:flutter/material.dart';
-import 'package:uni_connect/widgets/options/options_widgets.dart';
+import 'package:uni_connect/widgets/app_button.dart';
 
 class OptionDart extends StatelessWidget {
   const OptionDart({super.key});
-
-  void _openLogin(BuildContext context) {
-    Navigator.of(context).pushReplacementNamed('/login');
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -41,9 +37,23 @@ class OptionDart extends StatelessWidget {
                     ),
                   ),
                   const SizedBox(height: 32),
-                  OptionsWidget(
-                    onLecturerTap: () => _openLogin(context),
-                    onStudentTap: () => _openLogin(context),
+                  AppButton(
+                    text: 'Lecturer',
+                    icon: Icons.school_outlined,
+                    onPressed: () {
+                      Navigator.of(context).pushNamed('/lecturer-signup');
+                    },
+                  ),
+                  const SizedBox(height: 20),
+                  AppButton(
+                    text: 'Student',
+                    icon: Icons.people_outline,
+                    onPressed: () {
+                      Navigator.of(context).pushReplacementNamed(
+                        '/login',
+                        arguments: 'student',
+                      );
+                    },
                   ),
                 ],
               ),

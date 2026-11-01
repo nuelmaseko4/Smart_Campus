@@ -1,6 +1,9 @@
 // lib/main.dart
 import 'package:flutter/material.dart';
+import 'package:uni_connect/views/lecture/lecture_signup_screen.dart';
 import 'package:uni_connect/views/login/login_screen.dart';
+import 'package:uni_connect/views/signup/student_signup_screen.dart';
+import 'package:uni_connect/widgets/student_nav_bar.dart';
 
 import 'views/onboarding/onboard_screen.dart';
 import 'views/options/option_dart.dart';
@@ -20,8 +23,15 @@ class SmartConnectApp extends StatelessWidget {
       theme: ThemeData(primarySwatch: Colors.blue),
       home: const OnboardScreen(),
       routes: {
-        '/login': (context) => const LoginScreen(),
         '/options': (context) => const OptionDart(),
+        '/login': (context) {
+          final arguments = ModalRoute.of(context)?.settings.arguments;
+          final role = arguments is String ? arguments : 'student';
+          return LoginScreen(role: role);
+        },
+        '/student-signup': (context) => const StudentSignUpScreen(),
+        '/lecturer-signup': (context) => const LectureSignUpScreen(),
+        '/student': (context) => const StudentNavBar(),
       },
     );
   }

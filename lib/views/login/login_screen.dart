@@ -1,14 +1,27 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-
-import '/views/signup/signup_screen.dart';
-import '/widgets/login_widgets/login_header.dart';
-import '/widgets/student_widgets/student_nav_bar.dart';
-
-import '../../widgets/login_widgets/login_form.dart';
+import 'package:uni_connect/services/login_service.dart';
+import 'package:uni_connect/widgets/login_widgets/login_form.dart';
+import 'package:uni_connect/widgets/login_widgets/login_header.dart';
 
 class LoginScreen extends StatelessWidget {
-  const LoginScreen({super.key});
+  const LoginScreen({
+    super.key,
+    this.role = 'student',
+    this.service = const LoginService(),
+  });
+
+  final String role;
+  final LoginService service;
+
+  Future<void> _openStudentSignup(BuildContext context) async {
+    final created = await Navigator.of(context).pushNamed('/student-signup');
+    if (!context.mounted || created != true) return;
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Account created. Please log in.')),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -48,67 +61,38 @@ class LoginScreen extends StatelessWidget {
                     child: Column(
                       children: [
                         const SizedBox(height: 60),
-                        const LoginForm(),
+                        LoginForm(
+                          role: role,
+                          service: service,
+                          onAuthenticated: () {
+                            Navigator.of(context).pushNamedAndRemoveUntil(
+                              '/student',
+                              (route) => false,
+                            );
+                          },
+                        ),
                         const SizedBox(height: 40),
                         FadeInUp(
                           duration: const Duration(milliseconds: 1500),
                           child: const Text(
-                            "Forgot Password?",
+                            'Forgot Password?',
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
-                        const SizedBox(height: 40),
-                        SizedBox(
-                          width: double.infinity,
-                          child: ElevatedButton(
-                            onPressed: () {
-                              Navigator.push(
-                                // login button navigates to the StudentNavBar screen
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) => const StudentNavBar(),
-                                ),
-                              );
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.orange.shade900,
-                              padding: const EdgeInsets.symmetric(vertical: 16),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(30),
-                              ),
-                            ),
-                            child: const Text(
-                              'Login',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontWeight: FontWeight.bold,
-                              ),
-                            ),
-                          ),
-                        ),
-                        const SizedBox(height: 30),
+                        const SizedBox(height: 24),
                         FadeInUp(
                           duration: const Duration(milliseconds: 1600),
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.center,
                             children: [
                               const Text(
-                                "Don't have an account? ", // sign up prompt text
+                                "Don't have an account? ",
                                 style: TextStyle(color: Colors.grey),
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) =>
-                                          const SignUpScreen(),
-                                    ),
-                                  );
-                                },
+                              TextButton(
+                                onPressed: () => _openStudentSignup(context),
                                 child: Text(
-                                  "Sign Up",
+                                  'Sign up',
                                   style: TextStyle(
                                     color: Colors.orange.shade900,
                                     fontWeight: FontWeight.bold,
@@ -118,7 +102,7 @@ class LoginScreen extends StatelessWidget {
                             ],
                           ),
                         ),
-                        const SizedBox(height: 20),
+                        const SizedBox(height: 32),
                       ],
                     ),
                   ),
