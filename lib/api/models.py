@@ -1,3 +1,5 @@
+from datetime import datetime
+
 from flask_sqlalchemy import SQLAlchemy
 from werkzeug.security import generate_password_hash, check_password_hash
 
@@ -64,6 +66,18 @@ class Timetable(db.Model):
     start_time = db.Column(db.DateTime, nullable=False)
     end_time = db.Column(db.DateTime, nullable=False)
     unit_name = db.Column(db.String(120), nullable=False)
+    year_of_study = db.Column(
+        db.Integer,
+        nullable=False,
+        default=1,
+        server_default='1',
+    )
+    semester = db.Column(
+        db.Integer,
+        nullable=False,
+        default=1,
+        server_default='1',
+    )
 
     course = db.relationship('Course', backref='timetables')
     lecture = db.relationship('lecture', backref='timetables')
@@ -95,6 +109,12 @@ class Student(db.Model):
     password_hash = db.Column(db.String(255), nullable=False)
     course_id = db.Column(db.Integer, db.ForeignKey('courses.id'), nullable=False)
     email = db.Column(db.String(120), unique=True, nullable=True)
+    year_of_study = db.Column(
+        db.Integer,
+        nullable=False,
+        default=1,
+        server_default='1',
+    )
 
 
   
@@ -130,6 +150,20 @@ class Gate(db.Model):
     __tablename__ = 'gates'
     id = db.Column(db.Integer, primary_key=True)
     access_point = db.Column(db.String(100), unique=True, nullable=False)
+
+
+class GateEntry(db.Model):
+    __tablename__ = 'gate_entries'
+    id = db.Column(db.Integer, primary_key=True)
+    gate_id = db.Column(db.Integer, db.ForeignKey('gates.id'), nullable=False)
+    student_id = db.Column(
+        db.String(20),
+        db.ForeignKey('students.student_id'),
+        nullable=False,
+    )
+    scanned_at = db.Column(db.DateTime, nullable=False, default=datetime.now)
+
+    gate = db.relationship('Gate')
 
 
 class rooms(db.Model):

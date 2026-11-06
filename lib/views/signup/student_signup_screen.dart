@@ -141,6 +141,20 @@ class _StudentSignUpScreenState extends State<StudentSignUpScreen> {
               ),
               const SizedBox(height: 20),
               FadeInUp(
+                duration: const Duration(milliseconds: 1250),
+                child: AppDropdownField(
+                  label: 'Year of study',
+                  icon: Icons.calendar_today_outlined,
+                  helperText: 'Select your current year',
+                  options: _controller.yearOfStudyOptions,
+                  selectedValue: _controller.selectedYearOfStudy?.toString(),
+                  onSelected: _controller.selectYearOfStudy,
+                  validator: (value) =>
+                      value == null ? 'Please select your year of study' : null,
+                ),
+              ),
+              const SizedBox(height: 20),
+              FadeInUp(
                 duration: const Duration(milliseconds: 1300),
                 child: AppTextField(
                   controller: _controller.passwordController,

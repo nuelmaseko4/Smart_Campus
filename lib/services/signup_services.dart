@@ -6,16 +6,22 @@ import 'package:http/http.dart' as http;
 class Course {
   final int id;
   final String name;
+  final int duration;
 
-  const Course({required this.id, required this.name});
+  const Course({required this.id, required this.name, required this.duration});
 
   factory Course.fromJson(Map<String, dynamic> json) {
     final id = json['id'];
     final name = json['course_name'] ?? json['name'];
-    if (id is! int || name is! String || name.trim().isEmpty) {
+    final duration = json['duration'];
+    if (id is! int ||
+        name is! String ||
+        name.trim().isEmpty ||
+        duration is! int ||
+        duration < 1) {
       throw const FormatException('Invalid course returned by the API');
     }
-    return Course(id: id, name: name);
+    return Course(id: id, name: name, duration: duration);
   }
 }
 
@@ -68,6 +74,7 @@ class SignUpService {
     required String studentNumber,
     required String email,
     required String courseName,
+    required int yearOfStudy,
     required String password,
   }) async {
     final response = await http
@@ -78,6 +85,7 @@ class SignUpService {
             'student_id': studentNumber,
             'email': email,
             'course_name': courseName,
+            'year_of_study': yearOfStudy,
             'password': password,
           }),
         )

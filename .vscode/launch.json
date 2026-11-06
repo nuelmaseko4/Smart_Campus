@@ -2,6 +2,14 @@
   "version": "0.2.0",
   "configurations": [
     {
+      "name": "UniConnect (Android phone via Wi-Fi)",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": [
+        "--dart-define=API_BASE_URL=http://192.168.1.145:5000"
+      ]
+    },
+    {
       "name": "UniConnect (Android phone via USB)",
       "request": "launch",
       "type": "dart",

@@ -71,9 +71,10 @@ in `SignUpService`, then call it from the lecturer branch in
 
 - `SignUpController.loadCourses()` asks `SignUpService.fetchCourses()` for
   courses when the student form opens.
-- Selecting a course and completing valid fields enables submission.
-- `SignUpController.submit()` passes the student number, email, course, and
-  password to `SignUpService.signUp()`.
+- Selecting a course enables the year-of-study picker, whose options run from
+  year 1 through that course's duration.
+- `SignUpController.submit()` passes the student number, email, course, year
+  of study, and password to `SignUpService.signUp()`.
 - The service sends a `POST` request to `/signup` and returns a success flag
   and message. On success, the signup screen sends the same student number and
   password to `/login`; a successful login opens the student portal directly.
@@ -110,6 +111,12 @@ setting is limited to `src/debug`; use HTTPS and a production server for
 release builds. The phone and computer can instead communicate over Wi-Fi, but
 that requires Flask to listen on the computer's LAN interface and the app's
 `API_BASE_URL` Dart define to use the computer's current LAN IP.
+
+For Wi-Fi debugging, select **UniConnect (Android phone via Wi-Fi)** in Run and
+Debug. Update the `API_BASE_URL` in `.vscode/launch.json` to the computer's
+current IPv4 address if it is different from `192.168.1.145`. Connect both
+devices to the same trusted Wi-Fi network. Flask must listen on `0.0.0.0`, and
+Windows Firewall must allow inbound TCP port 5000 on the Private profile.
 
 ### Standalone profile APK over Wi-Fi
 
@@ -148,10 +155,11 @@ builds. The app needs rebuilding if the computer's LAN IP changes.
 
 The Flutter student service expects:
 
-- `GET /courses` to return a JSON list containing integer `id` and string
-  `course_name` values.
-- `POST /signup` to accept `student_id`, `email`, `course_name`, and `password`,
-  returning HTTP 201 and a JSON `message` on success.
+- `GET /courses` to return a JSON list containing integer `id`, string
+  `course_name`, and integer `duration` values.
+- `POST /signup` to accept `student_id`, `email`, `course_name`,
+  `year_of_study`, and `password`. The year must be between 1 and the selected
+  course's duration. Successful requests return HTTP 201 and a JSON `message`.
 - `POST /login` to accept `role`, `username` (the student number for students),
   and `password`, returning HTTP 200 with a non-empty `token`.
 

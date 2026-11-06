@@ -1,4 +1,3 @@
-// lib/main.dart
 import 'package:flutter/material.dart';
 import 'package:uni_connect/views/lecture/lecture_home_page.dart';
 import 'package:uni_connect/views/lecture/lecture_signup_screen.dart';
@@ -10,7 +9,7 @@ import 'views/onboarding/onboard_screen.dart';
 import 'views/options/option_dart.dart';
 
 void main() {
-  runApp(const SmartConnectApp());
+  runApp(const SmartConnectApp()); // entry point of the application
 }
 
 class SmartConnectApp extends StatelessWidget {
@@ -19,10 +18,19 @@ class SmartConnectApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      debugShowCheckedModeBanner: false,
+      debugShowCheckedModeBanner: false, // debug banner turned off
       title: 'UniConnect',
-      theme: ThemeData(primarySwatch: Colors.blue),
-      home: const OnboardScreen(),
+      theme: ThemeData(
+        colorScheme: ColorScheme.fromSeed(
+          seedColor: const Color.fromARGB(
+            255,
+            243,
+            226,
+            33,
+          ), // global setting of the app
+        ),
+      ),
+      home: const OnboardScreen(), // the home and routes "map"
       routes: {
         '/options': (context) => const OptionDart(),
         '/login': (context) {

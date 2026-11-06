@@ -15,6 +15,10 @@ class LoginResult {
 class LoginService {
   const LoginService();
 
+  Future<void> logout() {
+    return const FlutterSecureStorage().delete(key: 'access_token');
+  }
+
   Future<LoginResult> login({
     required String role,
     required String username,

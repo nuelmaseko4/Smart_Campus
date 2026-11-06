@@ -82,6 +82,7 @@ def signup_lecturer():
 def list_lecturers():
     rows = lecture.query.order_by(lecture.username).all()
     return jsonify([{
+        'id': l.id,
         'username': l.username,
         'name': l.lecture_name,
         'department': l.department,

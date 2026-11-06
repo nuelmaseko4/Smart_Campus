@@ -45,6 +45,20 @@ class SignUpController extends ChangeNotifier {
   List<String> get courseOptions => isStudent
       ? _courses.map((course) => course.name).toList()
       : _lecturerCourses;
+  List<String> get yearOfStudyOptions {
+    final course = _selectedCourse;
+    if (course == null) return [];
+    return List.generate(course.duration, (index) => '${index + 1}');
+  }
+
+  Course? get _selectedCourse {
+    for (final course in _courses) {
+      if (course.name == selectedCourse) return course;
+    }
+    return null;
+  }
+
+  int? selectedYearOfStudy;
 
   Future<void> loadCourses() async {
     if (!isStudent) return;
@@ -115,6 +129,12 @@ class SignUpController extends ChangeNotifier {
 
   void selectCourse(String? value) {
     selectedCourse = value;
+    selectedYearOfStudy = null;
+    _notifyIfActive();
+  }
+
+  void selectYearOfStudy(String? value) {
+    selectedYearOfStudy = value == null ? null : int.tryParse(value);
   }
 
   void togglePasswordVisibility() {
@@ -147,6 +167,12 @@ class SignUpController extends ChangeNotifier {
         message: 'Please select your course.',
       );
     }
+    if (selectedYearOfStudy == null) {
+      return const SignUpSubmissionResult(
+        success: false,
+        message: 'Please select your year of study.',
+      );
+    }
 
     isSubmitting = true;
     _notifyIfActive();
@@ -156,6 +182,7 @@ class SignUpController extends ChangeNotifier {
         studentNumber: identityController.text.trim(),
         email: emailController.text.trim(),
         courseName: selectedCourse!,
+        yearOfStudy: selectedYearOfStudy!,
         password: passwordController.text,
       );
       return SignUpSubmissionResult(
