@@ -10,9 +10,10 @@
       ]
     },
     {
-      "name": "UniConnect (Android phone via USB)",
+      "name": "UniConnect (Samsung A06 via USB)",
       "request": "launch",
       "type": "dart",
+      "deviceId": "R7AYB0RR48F",
       "preLaunchTask": "Forward Flask API to Android phone",
       "toolArgs": [
         "--dart-define=API_BASE_URL=http://127.0.0.1:5000"

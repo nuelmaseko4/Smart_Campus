@@ -100,11 +100,13 @@ Set-Location lib\api
 python -m flask --app app run --host 127.0.0.1 --port 5000 --no-debugger
 ```
 
-In VS Code, select **UniConnect (Android phone via USB)** in Run and Debug.
-Its pre-launch task runs `adb reverse` for port 5000, and its Dart define points
-the app at `http://127.0.0.1:5000` on the phone. Keep the phone connected with
-USB debugging enabled. The API should respond at `/` and `/courses` on the
-development computer before launching the Flutter app.
+In VS Code, select **UniConnect (Samsung A06 via USB)** in Run and Debug. The
+configuration targets the connected Samsung A06 (`SM_A066B`, ADB serial
+`R7AYB0RR48F`). Its pre-launch task runs `adb reverse` for port 5000 on that
+phone, and its Dart define points the app at `http://127.0.0.1:5000` on the
+phone. Keep the phone connected with USB debugging enabled. The API should
+respond at `/` and `/courses` on the development computer before launching the
+Flutter app.
 
 Debug Android builds allow cleartext HTTP for this local development API. That
 setting is limited to `src/debug`; use HTTPS and a production server for

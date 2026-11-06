@@ -6,6 +6,8 @@
       "type": "process",
       "command": "${env:LOCALAPPDATA}\\Android\\Sdk\\platform-tools\\adb.exe",
       "args": [
+        "-s",
+        "R7AYB0RR48F",
         "reverse",
         "tcp:5000",
         "tcp:5000"
