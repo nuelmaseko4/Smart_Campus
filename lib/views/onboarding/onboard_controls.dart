@@ -2,10 +2,10 @@ import "package:flutter/material.dart";
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 class OnboardControls extends StatelessWidget {
-  final PageController controller;
-  final int currentPage;
-  final int totalPages;
-  final VoidCallback onSkip;
+  final PageController controller; // the dots can move
+  final int currentPage; // which page
+  final int totalPages; // knows ther are 4 pages in total
+  final VoidCallback onSkip; // the funtions to call when the user clicks the buttons
   final VoidCallback onNext;
 
   const OnboardControls({
@@ -22,7 +22,7 @@ class OnboardControls extends StatelessWidget {
     final isLastPage = currentPage == totalPages - 1;
     final orange = Colors.orange.shade900;
 
-    return Row(
+    return Row( // skip button
       mainAxisAlignment: MainAxisAlignment.spaceBetween,
       children: [
         Opacity(

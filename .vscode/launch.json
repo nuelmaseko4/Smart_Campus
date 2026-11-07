@@ -1,0 +1,31 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "UniConnect (Android phone via Wi-Fi)",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": [
+        "--dart-define=API_BASE_URL=http://192.168.1.145:5000"
+      ]
+    },
+    {
+      "name": "UniConnect (Samsung A06 via USB)",
+      "request": "launch",
+      "type": "dart",
+      "deviceId": "R7AYB0RR48F",
+      "preLaunchTask": "Forward Flask API to Android phone",
+      "toolArgs": [
+        "--dart-define=API_BASE_URL=http://127.0.0.1:5000"
+      ]
+    },
+    {
+      "name": "UniConnect (Android emulator)",
+      "request": "launch",
+      "type": "dart",
+      "toolArgs": [
+        "--dart-define=API_BASE_URL=http://10.0.2.2:5000"
+      ]
+    }
+  ]
+}
