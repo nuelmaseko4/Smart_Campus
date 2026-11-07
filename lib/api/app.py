@@ -1,7 +1,9 @@
 import os
 from datetime import timedelta
+from pathlib import Path
 from urllib.parse import urlparse
 
+from dotenv import load_dotenv
 from flask import Flask, request
 from flask_jwt_extended import JWTManager
 from sqlalchemy import inspect, text
@@ -16,12 +18,15 @@ from routes.students_route import students_bp
 from routes.timetable_route import timetable_bp
 
 
+load_dotenv(dotenv_path=Path(__file__).resolve().with_name('.env'), override=False)
+
+
 def create_app(config_overrides=None):
     app = Flask(__name__)
     app.config.from_mapping(
         SQLALCHEMY_DATABASE_URI='sqlite:///uni_connect.db',
         SQLALCHEMY_TRACK_MODIFICATIONS=False,
-        JWT_SECRET_KEY='hjh7ggfgbnbjbnj889876',
+        JWT_SECRET_KEY=os.getenv('JWT_SECRET_KEY'),
         JWT_ACCESS_TOKEN_EXPIRES=timedelta(hours=12),
         RFID_READER_API_KEY=os.getenv('RFID_READER_API_KEY'),
         TIMETABLE_ADMIN_API_KEY=os.getenv('TIMETABLE_ADMIN_API_KEY'),
