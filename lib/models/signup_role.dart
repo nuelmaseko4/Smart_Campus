@@ -1,0 +1,1 @@
+enum SignUpRole { student, lecturer }

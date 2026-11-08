@@ -13,7 +13,7 @@ class PageView1 extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.asset(
-              'assests/animations/onboarding/Man.json',
+              'assests/animations/lottie/onboarding/Man.json',
               width: 280,
               height: 280,
               fit: BoxFit.contain,
@@ -21,7 +21,7 @@ class PageView1 extends StatelessWidget {
             ),
             const SizedBox(height: 16),
             const Text(
-              'Welcome to Smart Connect',
+              'Welcome to UniConnect',
               style: TextStyle(
                 fontSize: 24,
                 fontWeight: FontWeight.bold,
@@ -30,7 +30,7 @@ class PageView1 extends StatelessWidget {
             ),
             const SizedBox(height: 8),
             const Text(
-              'Connect with your university seamlessly',
+              'Your ultimate university companion',
               style: TextStyle(fontSize: 16, color: Colors.black),
             ),
           ],

@@ -13,21 +13,20 @@ class PageView3 extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.asset(
-              'assests/animations/onboarding/Business_plan.json',
+              'assests/animations/lottie/onboarding/Business_plan.json',
               width: 280,
               height: 280,
               fit: BoxFit.contain,
               repeat: true,
             ),
             const SizedBox(height: 8),
-            const Text(
-              'Easily track your class attandance and performance',
-              style: TextStyle(fontSize: 15, color: Colors.black),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Connect with your university seamlessly',
-              style: TextStyle(fontSize: 16, color: Colors.black),
+            const Padding(
+              padding: EdgeInsets.symmetric(horizontal: 24),
+              child: Text(
+                'Easily monitor your class attendance progress in one place through automated class attendance.',
+                textAlign: TextAlign.center,
+                style: TextStyle(fontSize: 15, color: Colors.black),
+              ),
             ),
           ],
         ),

@@ -13,21 +13,16 @@ class PageView2 extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.center,
           children: [
             Lottie.asset(
-              'assests/animations/onboarding/Office.json',
+              'assests/animations/lottie/onboarding/checking_phone.json',
               width: 280,
               height: 280,
               fit: BoxFit.contain,
               repeat: true,
             ),
-            const SizedBox(height: 8),
+            const SizedBox(height: 60),
             const Text(
-              'A secure way of communication',
+              'Connect  with your university seamlessly\nsecure and convenient',
               style: TextStyle(fontSize: 15, color: Colors.black),
-            ),
-            const SizedBox(height: 8),
-            const Text(
-              'Connect with your university seamlessly',
-              style: TextStyle(fontSize: 16, color: Colors.black),
             ),
           ],
         ),
