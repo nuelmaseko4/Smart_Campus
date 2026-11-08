@@ -2,6 +2,7 @@ import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
 import 'package:uni_connect/controllers/signup_controller.dart';
 import 'package:uni_connect/models/signup_role.dart';
+import 'package:uni_connect/services/login_service.dart';
 import 'package:uni_connect/services/signup_services.dart';
 import 'package:uni_connect/widgets/app_button.dart';
 import 'package:uni_connect/widgets/app_dropdown_field.dart';
@@ -9,9 +10,14 @@ import 'package:uni_connect/widgets/app_text_field.dart';
 import 'package:uni_connect/widgets/signup_page_layout.dart';
 
 class StudentSignUpScreen extends StatefulWidget {
-  const StudentSignUpScreen({super.key, this.service = const SignUpService()});
+  const StudentSignUpScreen({
+    super.key,
+    this.service = const SignUpService(),
+    this.loginService = const LoginService(),
+  });
 
   final SignUpService service;
+  final LoginService loginService;
 
   @override
   State<StudentSignUpScreen> createState() => _StudentSignUpScreenState();
@@ -20,6 +26,7 @@ class StudentSignUpScreen extends StatefulWidget {
 class _StudentSignUpScreenState extends State<StudentSignUpScreen> {
   final _formKey = GlobalKey<FormState>();
   late final SignUpController _controller;
+  bool _authenticating = false;
 
   @override
   void initState() {
@@ -37,16 +44,54 @@ class _StudentSignUpScreenState extends State<StudentSignUpScreen> {
     final result = await _controller.submit();
     if (!mounted) return;
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        backgroundColor: result.success
-            ? Colors.orange.shade900
-            : Colors.red.shade700,
-        content: Text(result.message),
-      ),
-    );
+    if (!result.success) {
+      ScaffoldMessenger.of(context).showSnackBar(
+        SnackBar(
+          backgroundColor: Colors.red.shade700,
+          content: Text(result.message),
+        ),
+      );
+      return;
+    }
 
-    if (result.success) Navigator.pop(context, true);
+    setState(() => _authenticating = true);
+    try {
+      final loginResult = await widget.loginService.login(
+        role: 'student',
+        identifier: _controller.identityController.text.trim(),
+        password: _controller.passwordController.text,
+      );
+      if (!mounted) return;
+
+      if (!loginResult.success) {
+        _returnToLogin(
+          'Account created, but automatic login failed: ${loginResult.message}',
+        );
+        return;
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Account created. Welcome!')),
+      );
+      Navigator.of(context)
+          .pushNamedAndRemoveUntil('/student', (route) => false);
+    } catch (error, stackTrace) {
+      debugPrint('Automatic login after signup failed: $error');
+      debugPrintStack(stackTrace: stackTrace);
+      if (!mounted) return;
+      _returnToLogin(
+        'Account created, but automatic login failed. Please log in.',
+      );
+    } finally {
+      if (mounted) setState(() => _authenticating = false);
+    }
+  }
+
+  void _returnToLogin(String message) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      SnackBar(backgroundColor: Colors.red.shade700, content: Text(message)),
+    );
+    Navigator.of(context).pop();
   }
 
   @override
@@ -86,11 +131,26 @@ class _StudentSignUpScreenState extends State<StudentSignUpScreen> {
                 child: AppDropdownField(
                   label: 'Course',
                   icon: Icons.school_outlined,
+                  helperText: 'Tap to search by course name',
                   options: _controller.courseOptions,
                   selectedValue: _controller.selectedCourse,
                   isLoading: _controller.isLoadingCourses,
                   onSelected: _controller.selectCourse,
                   validator: _controller.validateCourse,
+                ),
+              ),
+              const SizedBox(height: 20),
+              FadeInUp(
+                duration: const Duration(milliseconds: 1250),
+                child: AppDropdownField(
+                  label: 'Year of study',
+                  icon: Icons.calendar_today_outlined,
+                  helperText: 'Select your current year',
+                  options: _controller.yearOfStudyOptions,
+                  selectedValue: _controller.selectedYearOfStudy?.toString(),
+                  onSelected: _controller.selectYearOfStudy,
+                  validator: (value) =>
+                      value == null ? 'Please select your year of study' : null,
                 ),
               ),
               const SizedBox(height: 20),
@@ -130,7 +190,9 @@ class _StudentSignUpScreenState extends State<StudentSignUpScreen> {
                   text: 'Sign Up',
                   onPressed: _submit,
                   isLoading:
-                      _controller.isLoadingCourses || _controller.isSubmitting,
+                      _controller.isLoadingCourses ||
+                      _controller.isSubmitting ||
+                      _authenticating,
                   enabled: _controller.courseLoadError == null,
                 ),
               ),

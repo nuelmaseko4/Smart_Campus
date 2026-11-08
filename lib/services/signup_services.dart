@@ -6,16 +6,22 @@ import 'package:http/http.dart' as http;
 class Course {
   final int id;
   final String name;
+  final int duration;
 
-  const Course({required this.id, required this.name});
+  const Course({required this.id, required this.name, required this.duration});
 
   factory Course.fromJson(Map<String, dynamic> json) {
     final id = json['id'];
     final name = json['course_name'] ?? json['name'];
-    if (id is! int || name is! String || name.trim().isEmpty) {
+    final duration = json['duration'];
+    if (id is! int ||
+        name is! String ||
+        name.trim().isEmpty ||
+        duration is! int ||
+        duration < 1) {
       throw const FormatException('Invalid course returned by the API');
     }
-    return Course(id: id, name: name);
+    return Course(id: id, name: name, duration: duration);
   }
 }
 
@@ -39,7 +45,7 @@ class SignUpService {
       return 'http://127.0.0.1:5000';
     }
     if (defaultTargetPlatform == TargetPlatform.android) {
-      return 'http://10.0.2.2:5000';
+      return 'http://127.0.0.1:5000';
     }
     return 'http://127.0.0.1:5000';
   }
@@ -68,6 +74,7 @@ class SignUpService {
     required String studentNumber,
     required String email,
     required String courseName,
+    required int yearOfStudy,
     required String password,
   }) async {
     final response = await http
@@ -78,6 +85,7 @@ class SignUpService {
             'student_id': studentNumber,
             'email': email,
             'course_name': courseName,
+            'year_of_study': yearOfStudy,
             'password': password,
           }),
         )
@@ -87,6 +95,41 @@ class SignUpService {
         jsonDecode(response.body) as Map<String, dynamic>;
     final message = body['message']?.toString() ?? 'Unknown error';
 
+    if (response.statusCode == 201) {
+      return SignUpResult(success: true, message: message);
+    }
+    return SignUpResult(success: false, message: message);
+  }
+
+  Future<SignUpResult> signUpLecturer({
+    required String firstName,
+    required String lastName,
+    required String email,
+    required List<int> courseIds,
+    required String password,
+  }) async {
+    final response = await http
+        .post(
+          Uri.parse('$baseUrl/signup/lecturer'),
+          headers: {'Content-Type': 'application/json'},
+          body: jsonEncode({
+            'first_name': firstName,
+            'last_name': lastName,
+            'email': email,
+            'course_ids': courseIds,
+            'password': password,
+          }),
+        )
+        .timeout(const Duration(seconds: 10));
+
+    final decoded = jsonDecode(response.body);
+    if (decoded is! Map<String, dynamic>) {
+      throw const FormatException(
+        'Lecturer signup response must be a JSON object',
+      );
+    }
+
+    final message = decoded['message']?.toString() ?? 'Unknown error';
     if (response.statusCode == 201) {
       return SignUpResult(success: true, message: message);
     }

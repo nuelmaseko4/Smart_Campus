@@ -1,8 +1,8 @@
 import 'package:animate_do/animate_do.dart';
 import 'package:flutter/material.dart';
-import 'package:uni_connect/widgets/login_form.dart';
-import 'package:uni_connect/widgets/login_header.dart';
 import 'package:uni_connect/services/login_service.dart';
+import 'package:uni_connect/widgets/login_widgets/login_form.dart';
+import 'package:uni_connect/widgets/login_widgets/login_header.dart';
 
 class LoginScreen extends StatelessWidget {
   const LoginScreen({
@@ -14,13 +14,21 @@ class LoginScreen extends StatelessWidget {
   final String role;
   final LoginService service;
 
-  Future<void> _openStudentSignup(BuildContext context) async {
-    final created = await Navigator.of(context).pushNamed('/student-signup');
-    if (!context.mounted || created != true) return;
+  String get _normalizedRole =>
+      role.trim().toLowerCase() == 'lecturer' ? 'lecturer' : 'student';
 
-    ScaffoldMessenger.of(context).showSnackBar(
-      const SnackBar(content: Text('Account created. Please log in.')),
-    );
+  Future<void> _openSignup(BuildContext context) async {
+    final route = _normalizedRole == 'lecturer'
+        ? '/lecturer-signup'
+        : '/student-signup';
+    final result = await Navigator.of(context).pushNamed(route);
+    if (!context.mounted || result == null || result == false) return;
+
+    final message = result is String && result.isNotEmpty
+        ? result
+        : 'Account created. Please log in.';
+    ScaffoldMessenger.of(context)
+        .showSnackBar(SnackBar(content: Text(message)));
   }
 
   @override
@@ -62,11 +70,13 @@ class LoginScreen extends StatelessWidget {
                       children: [
                         const SizedBox(height: 60),
                         LoginForm(
-                          role: role,
+                          role: _normalizedRole,
                           service: service,
                           onAuthenticated: () {
                             Navigator.of(context).pushNamedAndRemoveUntil(
-                              '/student',
+                              _normalizedRole == 'lecturer'
+                                  ? '/lecturer'
+                                  : '/student',
                               (route) => false,
                             );
                           },
@@ -75,7 +85,7 @@ class LoginScreen extends StatelessWidget {
                         FadeInUp(
                           duration: const Duration(milliseconds: 1500),
                           child: const Text(
-                            "Forgot Password?",
+                            'Forgot Password?',
                             style: TextStyle(color: Colors.grey),
                           ),
                         ),
@@ -90,7 +100,7 @@ class LoginScreen extends StatelessWidget {
                                 style: TextStyle(color: Colors.grey),
                               ),
                               TextButton(
-                                onPressed: () => _openStudentSignup(context),
+                                onPressed: () => _openSignup(context),
                                 child: Text(
                                   'Sign up',
                                   style: TextStyle(

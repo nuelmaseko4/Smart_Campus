@@ -15,19 +15,24 @@ class LoginResult {
 class LoginService {
   const LoginService();
 
+  Future<void> logout() {
+    return const FlutterSecureStorage().delete(key: 'access_token');
+  }
+
   Future<LoginResult> login({
     required String role,
-    required String username,
+    required String identifier,
     required String password,
   }) async {
     final uri = Uri.parse('${SignUpService.baseUrl}/login');
+    final isLecturer = role.trim().toLowerCase() == 'lecturer';
     final response = await http
         .post(
           uri,
           headers: {'Content-Type': 'application/json'},
           body: jsonEncode({
             'role': role,
-            'username': username,
+            if (isLecturer) 'email': identifier else 'username': identifier,
             'password': password,
           }),
         )

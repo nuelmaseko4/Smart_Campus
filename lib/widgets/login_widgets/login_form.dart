@@ -42,7 +42,7 @@ class _LoginFormState extends State<LoginForm> {
       // The service handles sending the correct JSON based on the role
       final result = await widget.service.login(
         role: widget.role,
-        username: _usernameController.text.trim(),
+        identifier: _usernameController.text.trim(),
         password: _passwordController.text,
       );
       if (!mounted) return;
@@ -77,8 +77,8 @@ class _LoginFormState extends State<LoginForm> {
   Widget build(BuildContext context) {
     // 👈 1. Determine what to show based on the role
     final isStudent = widget.role == 'student';
-    final inputHint = isStudent ? 'Student ID number' : 'Username';
-    final inputIcon = isStudent ? Icons.badge_outlined : Icons.person_outline;
+    final inputHint = isStudent ? 'Student ID number' : 'Email address';
+    final inputIcon = isStudent ? Icons.badge_outlined : Icons.email_outlined;
     final buttonText = isStudent ? 'Login' : 'Login as Lecturer';
 
     return FadeInUp(
@@ -113,6 +113,9 @@ class _LoginFormState extends State<LoginForm> {
                 ),
                 child: AppTextField(
                   controller: _usernameController,
+                  keyboardType: isStudent
+                      ? TextInputType.text
+                      : TextInputType.emailAddress,
                   decoration: InputDecoration(
                     hintText: inputHint, // 👈 Dynamic hint
                     hintStyle: const TextStyle(color: Colors.grey),

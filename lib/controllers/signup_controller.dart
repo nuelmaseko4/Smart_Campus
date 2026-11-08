@@ -12,22 +12,11 @@ class SignUpSubmissionResult {
 class SignUpController extends ChangeNotifier {
   SignUpController({required this.role, this.service = const SignUpService()});
 
-  static const _lecturerCourses = [
-    'Computer Science',
-    'Information Technology',
-    'Software Engineering',
-    'Business Administration',
-    'Accounting and Finance',
-    'Civil Engineering',
-    'Electrical Engineering',
-    'Nursing',
-    'Education',
-    'Law',
-  ];
-
   final SignUpRole role;
   final SignUpService service;
   final identityController = TextEditingController();
+  final firstNameController = TextEditingController();
+  final lastNameController = TextEditingController();
   final emailController = TextEditingController();
   final passwordController = TextEditingController();
   final confirmPasswordController = TextEditingController();
@@ -42,13 +31,28 @@ class SignUpController extends ChangeNotifier {
   bool _isDisposed = false;
 
   bool get isStudent => role == SignUpRole.student;
-  List<String> get courseOptions => isStudent
-      ? _courses.map((course) => course.name).toList()
-      : _lecturerCourses;
+  List<String> get courseOptions =>
+      _courses.map((course) => course.name).toList();
+  List<Course> get courses => List.unmodifiable(_courses);
+  List<Course> get selectedCourses => List.unmodifiable(_selectedCourses);
+
+  final List<Course> _selectedCourses = [];
+  List<String> get yearOfStudyOptions {
+    final course = _selectedCourse;
+    if (course == null) return [];
+    return List.generate(course.duration, (index) => '${index + 1}');
+  }
+
+  Course? get _selectedCourse {
+    for (final course in _courses) {
+      if (course.name == selectedCourse) return course;
+    }
+    return null;
+  }
+
+  int? selectedYearOfStudy;
 
   Future<void> loadCourses() async {
-    if (!isStudent) return;
-
     isLoadingCourses = true;
     courseLoadError = null;
     _notifyIfActive();
@@ -63,16 +67,16 @@ class SignUpController extends ChangeNotifier {
       debugPrintStack(stackTrace: stackTrace);
       if (_isDisposed) return;
       isLoadingCourses = false;
-      courseLoadError = 'Could not load courses. Please try again.';
+      courseLoadError =
+          'Could not load courses from ${SignUpService.baseUrl}. '
+          'Check that Flask is running and USB port forwarding is active, then retry.';
       _notifyIfActive();
     }
   }
 
   String? validateIdentity(String? value) {
     if (value == null || value.trim().isEmpty) {
-      return isStudent
-          ? 'Please enter your student number'
-          : 'Please enter your username';
+      return 'Please enter your student number';
     }
     return null;
   }
@@ -111,8 +115,58 @@ class SignUpController extends ChangeNotifier {
     return value == null ? 'Please select your course' : null;
   }
 
+  String? validateSelectedCourses() {
+    if (_selectedCourses.isEmpty) {
+      return 'Please select at least one course';
+    }
+    return null;
+  }
+
+  String? validateFirstName(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please enter your first name';
+    }
+    return value.trim().length > 50
+        ? 'First name must be at most 50 characters'
+        : null;
+  }
+
+  String? validateLastName(String? value) {
+    if (value == null || value.trim().isEmpty) {
+      return 'Please enter your last name';
+    }
+    return value.trim().length > 50
+        ? 'Last name must be at most 50 characters'
+        : null;
+  }
+
   void selectCourse(String? value) {
     selectedCourse = value;
+    selectedYearOfStudy = null;
+    _notifyIfActive();
+  }
+
+  void toggleCourse(int courseId, bool selected) {
+    Course? course;
+    for (final item in _courses) {
+      if (item.id == courseId) {
+        course = item;
+        break;
+      }
+    }
+    if (course == null) return;
+    if (selected) {
+      if (!_selectedCourses.any((item) => item.id == courseId)) {
+        _selectedCourses.add(course);
+      }
+    } else {
+      _selectedCourses.removeWhere((item) => item.id == courseId);
+    }
+    _notifyIfActive();
+  }
+
+  void selectYearOfStudy(String? value) {
+    selectedYearOfStudy = value == null ? null : int.tryParse(value);
   }
 
   void togglePasswordVisibility() {
@@ -126,23 +180,30 @@ class SignUpController extends ChangeNotifier {
   }
 
   Future<SignUpSubmissionResult> submit() async {
-    if (isStudent && (isLoadingCourses || courseLoadError != null)) {
+    if (isLoadingCourses || courseLoadError != null) {
       return const SignUpSubmissionResult(
         success: false,
         message: 'Courses are unavailable. Please try again.',
       );
     }
 
-    if (!isStudent) {
+    if (isStudent) {
+      if (selectedCourse == null) {
+        return const SignUpSubmissionResult(
+          success: false,
+          message: 'Please select your course.',
+        );
+      }
+      if (selectedYearOfStudy == null) {
+        return const SignUpSubmissionResult(
+          success: false,
+          message: 'Please select your year of study.',
+        );
+      }
+    } else if (_selectedCourses.isEmpty) {
       return const SignUpSubmissionResult(
         success: false,
-        message: 'Lecturer signup is not connected yet.',
-      );
-    }
-    if (selectedCourse == null) {
-      return const SignUpSubmissionResult(
-        success: false,
-        message: 'Please select your course.',
+        message: 'Please select at least one course.',
       );
     }
 
@@ -150,18 +211,27 @@ class SignUpController extends ChangeNotifier {
     _notifyIfActive();
 
     try {
-      final result = await service.signUp(
-        studentNumber: identityController.text.trim(),
-        email: emailController.text.trim(),
-        courseName: selectedCourse!,
-        password: passwordController.text,
-      );
+      final result = isStudent
+          ? await service.signUp(
+              studentNumber: identityController.text.trim(),
+              email: emailController.text.trim(),
+              courseName: selectedCourse!,
+              yearOfStudy: selectedYearOfStudy!,
+              password: passwordController.text,
+            )
+          : await service.signUpLecturer(
+              firstName: firstNameController.text.trim(),
+              lastName: lastNameController.text.trim(),
+              email: emailController.text.trim(),
+              courseIds: _selectedCourses.map((course) => course.id).toList(),
+              password: passwordController.text,
+            );
       return SignUpSubmissionResult(
         success: result.success,
         message: result.message,
       );
     } catch (error, stackTrace) {
-      debugPrint('Student signup failed: $error');
+      debugPrint('${isStudent ? 'Student' : 'Lecturer'} signup failed: $error');
       debugPrintStack(stackTrace: stackTrace);
       return const SignUpSubmissionResult(
         success: false,
@@ -183,6 +253,8 @@ class SignUpController extends ChangeNotifier {
   void dispose() {
     _isDisposed = true;
     identityController.dispose();
+    firstNameController.dispose();
+    lastNameController.dispose();
     emailController.dispose();
     passwordController.dispose();
     confirmPasswordController.dispose();

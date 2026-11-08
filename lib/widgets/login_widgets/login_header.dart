@@ -14,7 +14,7 @@ class LoginHeader extends StatelessWidget {
           FadeInUp(
             duration: const Duration(milliseconds: 1000),
             child: const Text(
-              "Student Portal",
+              "UniConnect",
               style: TextStyle(color: Colors.white, fontSize: 40),
             ),
           ),
@@ -22,7 +22,7 @@ class LoginHeader extends StatelessWidget {
           FadeInUp(
             duration: const Duration(milliseconds: 1300),
             child: const Text(
-              "Sign in with your student credentials",
+              "Sign in with your UniConnect credentials",
               style: TextStyle(color: Colors.white, fontSize: 18),
             ),
           ),
